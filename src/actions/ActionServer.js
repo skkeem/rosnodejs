@@ -96,7 +96,7 @@ class ActionServer extends EventEmitter {
     if (handle) {
       if (handle.status === GoalStatuses.RECALLING) {
         handle.status = GoalStatuses.RECALLED;
-        this.publishResult(status.status, this._createMessage('result'));
+        this.publishResult(handle.status, this._createMessage('result'));
       }
 
       handle._destructionTime = msg.goal_id.stamp;
@@ -116,7 +116,7 @@ class ActionServer extends EventEmitter {
     }
     else {
       // track goal, I guess
-      this.emit('goal', handle);
+      this.emit('goal', {msg: msg, handle: handle});
     }
 
     return true;
@@ -146,7 +146,7 @@ class ActionServer extends EventEmitter {
         }
 
         if (handle.setCancelRequested()) {
-          this.emit('cancel', handle);
+          this.emit('cancel', {msg: msg, handle: handle});
         }
       }
     }
